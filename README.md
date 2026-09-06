@@ -90,6 +90,10 @@ STIG benchmark. This is the reason the benchmark version in use (SCAP Security G
 | Not checked | 2 | 2 | 0 |
 | Compliance score | 69.58% | 78.06% | +8.48 points |
 
+![Baseline to post-hardening delta](screenshots/openscap_delta_comparison.png)
+
+*Baseline versus post-hardening OpenSCAP results, 69.58% to 78.06%.*
+
 The Ansible remediation run applied **13 configuration changes with 0 failures**, covering
 audit subsystem configuration, privilege escalation re-authentication, SSSD credential
 handling, audit log permissions, and kernel module load auditing.
@@ -183,14 +187,40 @@ services.
 
 ## Screenshots
 
-| Screenshot | Caption |
-|---|---|
-| ![Baseline OpenSCAP report](screenshots/openscap_baseline_report.png) | `openscap_baseline_report.png`: Full OpenSCAP HTML report for the baseline scan, showing per-rule pass and fail status against the Ubuntu 24.04 STIG V1R5 profile before any hardening. |
-| ![Baseline scan summary](screenshots/openscap_baseline_summary.png) | `openscap_baseline_summary.png`: Baseline scan result summary, 28 passed and 11 failed, for a compliance score of 69.58%. |
-| ![Generated Ansible playbook](screenshots/ansible_playbook_generated.png) | `ansible_playbook_generated.png`: The remediation playbook generated from the STIG profile by `oscap xccdf generate fix`, saved as `stig_remediation.yml`. |
-| ![Ansible hardening run](screenshots/ansible_hardening_run.png) | `ansible_hardening_run.png`: The `ansible-playbook` run against the lab host, applying 13 configuration changes with 0 failures. |
-| ![Post-hardening OpenSCAP report](screenshots/openscap_post_report.png) | `openscap_post_report.png`: Full OpenSCAP HTML report for the post-remediation scan, run with the identical profile and datastream. |
-| ![Baseline to post-hardening delta](screenshots/openscap_delta_comparison.png) | `openscap_delta_comparison.png`: Side-by-side comparison of the baseline and post-hardening results, 69.58% to 78.06%, with 10 additional rules passing and 4 fewer failing. |
+### 1. Baseline assessment
+
+![Baseline OpenSCAP report](screenshots/openscap_baseline_report.png)
+
+Full OpenSCAP HTML report for the baseline scan, showing per-rule pass and fail status
+against the Ubuntu 24.04 STIG V1R5 profile before any hardening.
+
+![Baseline scan summary](screenshots/openscap_baseline_summary.png)
+
+Baseline scan result summary, 28 passed and 11 failed, for a compliance score of 69.58%.
+
+### 2. Remediation
+
+![Generated Ansible playbook](screenshots/ansible_playbook_generated.png)
+
+The remediation playbook generated from the STIG profile by `oscap xccdf generate fix`,
+saved as `stig_remediation.yml`.
+
+![Ansible hardening run](screenshots/ansible_hardening_run.png)
+
+The `ansible-playbook` run against the lab host, applying 13 configuration changes with
+0 failures.
+
+### 3. Reassessment
+
+![Post-hardening OpenSCAP report](screenshots/openscap_post_report.png)
+
+Full OpenSCAP HTML report for the post-remediation scan, run with the identical profile
+and datastream.
+
+![Baseline to post-hardening delta](screenshots/openscap_delta_comparison.png)
+
+Side-by-side comparison of the baseline and post-hardening results, 69.58% to 78.06%,
+with 10 additional rules passing and 4 fewer failing.
 
 ## Authorization
 
