@@ -1,0 +1,14 @@
+title: FedRAMP RMF Compliance Lab
+description: >-
+  FedRAMP-aligned RMF compliance lab: DISA STIG hardening via Ansible, OpenSCAP
+  scanning, POA&M, SSP, FedRAMP control mapping, and SOX/COSO access
+  certification on Ubuntu 24.04.
+theme: jekyll-theme-primer
+
+# stig_remediation.yml is an OpenSCAP-generated Ansible playbook containing Jinja2
+# {{ ... }} expressions. Jekyll runs every file through Liquid, which cannot parse
+# them and fails the build. Excluding it keeps the file in the repository while
+# leaving it out of the rendered site.
+exclude:
+  - stig_remediation.yml
+  - content/
