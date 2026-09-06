@@ -1,0 +1,31 @@
+# ComplianceAsCode build source, not a deliverable
+content/
+
+# OS junk
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Desktop.ini
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+
+# Editor and IDE junk
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.bak
+*.tmp
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Scan artifacts that are regenerated, keep only committed reports
+*.log
