@@ -5,47 +5,27 @@ host through a full FedRAMP Moderate authorization cycle: baseline assessment wi
 OpenSCAP against the Canonical Ubuntu 24.04 LTS STIG V1R5 benchmark, automated
 remediation with Ansible, reassessment to measure the delta, and a documentation package
 covering the residual risk that remains. Every number in this repository comes from scans
-actually run against the lab host, and every finding traces back to a real DISA STIG rule
-ID.
-
-## What This Demonstrates
-
-- **DISA STIG hardening** of an Ubuntu 24.04 LTS host against the V1R5 benchmark, profile
-  `xccdf_org.ssgproject.content_profile_stig`.
-- **OpenSCAP scanning** with SCAP content built from ComplianceAsCode source, producing
-  machine-readable results and HTML reports before and after remediation.
-- **Ansible automation**, using a remediation playbook generated directly from the scanned
-  profile and applied to the host.
-- **Plan of Action and Milestones (POA&M)** tracking each unresolved finding with its STIG
-  ID, risk level, responsible party, and target completion date.
-- **System Security Plan (SSP)** summary with FIPS 199 categorization and per-family
-  control implementation status.
-- **FedRAMP Moderate control mapping** across 52 representative NIST SP 800-53 Rev 5
-  controls spanning all 20 control families, with inherited versus customer
-  responsibility called out per control.
-- **CIS / DISA STIG / NIST 800-53 crosswalk** extracted from the SCAP datastream itself,
-  using only rules that carry all three references in the same rule definition.
-- **SOX/COSO access certification** covering an access review, COSO component mapping,
-  separation of duties matrix, and sign-off log.
+run against the lab host, and every finding traces back to a DISA STIG rule ID from the
+benchmark.
 
 ## Architecture
 
 The lab produces three deliverables.
 
-**1. Hardened Ubuntu 24.04 LTS host.** A single Ubuntu 24.04 LTS server running as a WSL2
+**Hardened Ubuntu 24.04 LTS host.** A single Ubuntu 24.04 LTS server running as a WSL2
 instance, used as the assessment target. The system boundary is the operating system and
 its installed packages; no network-facing application, database, or externally reachable
 service runs on the host. The host is scanned with OpenSCAP against the STIG profile,
 remediated with the generated Ansible playbook, then rescanned with the identical profile
 and datastream to isolate the effect of remediation.
 
-**2. RMF documentation package.** The artifacts an assessor would expect to receive
+**RMF documentation package.** The artifacts an assessor would expect to receive
 alongside the system: an SSP summary, a POA&M, a FedRAMP Moderate control matrix, a
 three-framework crosswalk, and the remediation playbook itself. Each document is built
 from the scan output rather than from a template, so the SSP, the POA&M, and the OpenSCAP
 reports carry the same numbers.
 
-**3. SOX/COSO access certification.** The access review side of the control environment,
+**SOX/COSO access certification.** The access review side of the control environment,
 which sits outside the technical STIG scope but inside the same governance story: an
 access review of 15 simulated users across 3 systems with per-user business justification
 and certifier action, a mapping of the review to COSO components, a separation of duties
@@ -72,7 +52,7 @@ matrix, and a sign-off log.
 
 This lab originally targeted Ubuntu 22.04 LTS (jammy). It was switched to Ubuntu 24.04 LTS
 during environment setup because `openscap-scanner` and `scap-security-guide` are not
-actually installable on jammy: the package metadata references them, but the binaries were
+installable on jammy: the package metadata references them, but the binaries were
 never published to the official archive, so the install resolves and then fails to fetch.
 
 Ubuntu 24.04 was used instead, since both packages are available natively there. The SCAP
@@ -94,11 +74,18 @@ STIG benchmark. This is the reason the benchmark version in use (SCAP Security G
 
 *Baseline versus post-hardening OpenSCAP results, 69.58% to 78.06%.*
 
+The columns do not sum to the same total (41 rules at baseline, 47 after). The figures
+are the pass, fail and "other" counts from the OpenSCAP report summary bar (see the
+screenshots), and that bar leaves out rules in other result states such as not applicable. Both scans used the same profile and datastream, so the 6 extra rules in the
+post-hardening counts were evaluated at baseline too, in a state the bar does not count.
+The per-rule results files were not committed, so the exact baseline state of those 6
+rules is not recorded here.
+
 The Ansible remediation run applied **13 configuration changes with 0 failures**, covering
 audit subsystem configuration, privilege escalation re-authentication, SSSD credential
 handling, audit log permissions, and kernel module load auditing.
 
-The **7 findings that remain open** are tracked in `POAM.xlsx` with their real DISA STIG
+The **7 findings that remain open** are tracked in `POAM.xlsx` with their DISA STIG
 rule IDs, risk levels, responsible party, and target completion dates. They split into
 findings that are inherent to the lab environment and cannot be remediated here, and
 findings that require a configuration decision beyond the scope of an unattended
@@ -224,12 +211,9 @@ with 10 additional rules passing and 4 fewer failing.
 
 ## Authorization
 
-All scanning, hardening, and remediation described in this repository was performed against
-a local virtual machine that I own and control, running on my own hardware. No external,
-third-party, shared, or production system was scanned, probed, accessed, or targeted at any
-point. The lab host runs no network-facing service and exists solely as a self-contained
-compliance exercise. The access certification data is synthetic and does not describe real
-users or real production entitlements.
+Everything ran against a WSL2 instance on my own machine. No other system was scanned or
+touched, and the lab host runs no network-facing service. The access certification data is
+synthetic and does not describe real users or production entitlements.
 
 ## Notes on POA&M and SSP Structure
 
@@ -237,9 +221,8 @@ users or real production entitlements.
 
 `POAM.xlsx` has two worksheets, `POAM` and `Notes`. The POA&M sheet carries one row per
 open finding with the columns POA&M ID, Control ID, Weakness, Risk Level, Responsible
-Party, Completion Date, and Status. Control IDs are the real DISA STIG rule IDs from the
-scan, not invented identifiers, so each row traces back to a specific line in the OpenSCAP
-report.
+Party, Completion Date, and Status. Control IDs are the DISA STIG rule IDs from the scan,
+so each row traces back to a specific line in the OpenSCAP report.
 
 The 7 findings that remain open after remediation fall into two categories:
 
@@ -253,7 +236,7 @@ The 7 findings that remain open after remediation fall into two categories:
   certificate trust configuration (UBTU-24-400360, UBTU-24-400370).
 
 Risk levels follow the severity assigned by the STIG benchmark rather than being set by
-hand, and target completion dates are real forward-looking dates.
+hand, and target completion dates are forward-looking.
 
 ### SSP
 
@@ -262,7 +245,7 @@ description and boundary, FIPS 199 categorization with per-objective rationale, 
 family implementation status across all 20 NIST SP 800-53 Rev 5 families, a FedRAMP control
 inheritance table, and a summary of assessment results.
 
-Two structural choices are worth calling out:
+The SSP makes two structural choices:
 
 - Implementation status uses three values, Implemented, Partially Implemented, and Not
   Applicable, and each is tied to evidence. "Partially Implemented" always means an open
@@ -271,6 +254,3 @@ Two structural choices are worth calling out:
   FedRAMP-authorized cloud platform, the inheritance table describes what would be
   inherited in a production CSP deployment and marks everything else as customer
   responsibility, rather than asserting inheritance the lab cannot demonstrate.
-
-The control family status table and the assessment result totals in the SSP are the same
-numbers as the OpenSCAP reports and the POA&M, drawn from the same two scan runs.
